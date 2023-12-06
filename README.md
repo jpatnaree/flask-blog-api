@@ -31,5 +31,6 @@ After completing the setup, and **before** starting the tasks, you should famili
         - id (integer, primary key)
         - user_id (integer, foreign key to user_table)
         - content(string)
+    - after the table is created run `flask db migrate` and `flask db upgrade` again
     - it will have a many to one relationship with blog (i.e. a blog can have many comments, but a comment can only be on one blog)
 - Update your database diagram to include `Comment`
