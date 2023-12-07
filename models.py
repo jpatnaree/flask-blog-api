@@ -35,7 +35,7 @@ class User(db.Model,SerializerMixin):
 
 class Blog(db.Model, SerializerMixin):
     __tablename__ = "blog_table"
-    serialize_rules = ("-user_object.blog_list",)
+    serialize_rules = ("-user_object.blog_list","-comment_list.blog_object")
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user_table.id"))
     content = db.Column(db.String)
@@ -43,7 +43,7 @@ class Blog(db.Model, SerializerMixin):
 
     user_object = db.relationship("User", back_populates="blog_list")
 
-
+    comment_list = db.relationship("Comment", back_populates="blog_object")
     @validates('content')
     def validate_content(self, key:str, content:str):
         if len(content.split(' ')) < 5:
@@ -58,4 +58,11 @@ class Blog(db.Model, SerializerMixin):
     #         "title": self.title,
     #     }
 
-
+class Comment(db.Model, SerializerMixin):
+    __tablename__ = 'comment_table'
+    serialize_rules = ("-blog_object.comment_list",)
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String)
+    blog_id = db.Column(db.Integer, db.ForeignKey("blog_table.id"))
+    
+    blog_object = db.relationship("Blog", back_populates="comment_list")
